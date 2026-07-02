@@ -1,0 +1,31 @@
+# 가상환경
+**/.venv/
+**/venv/
+**/env/
+
+# 환경 변수 (보안)
+**/.env
+**/.env.*
+
+# 클로드
+**/.claude/
+
+# 파이썬 캐시
+**/*.py[cod]
+**/__pycache__/
+**/*.so
+
+# IDE 설정
+**/.vscode/
+**/.idea/
+
+## 의존성
+**/node_modules/
+**/dist/
+**/.next/
+**/out/
+**/*.egg-info/
+
+
+## macOS
+**/.DS_Store
