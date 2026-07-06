@@ -3,7 +3,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from apps.post.models.entities import PostEntity
 
-# MongoDB에서 게시글이 저장되는 컬렉션(=RDB의 테이블과 비슷한 개념) 이름
+# MongoDB에서 Post가 저장되는 컬렉션(=RDB의 테이블과 비슷한 개념) 이름
 COLLECTION_NAME = "posts"
 
 
