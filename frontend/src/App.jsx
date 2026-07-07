@@ -8,7 +8,9 @@ import PostEditPage from "./pages/PostEditPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
+import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import ContactWritePage from "./pages/ContactWritePage";
 import "./App.css";
 
 /**
@@ -16,8 +18,10 @@ import "./App.css";
  * "/"                    -> 게시글 목록
  * "/login"                -> 로그인
  * "/signup"                -> 회원가입
- * "/news", "/about"       -> 아직 내용 없는 임시 페이지
+ * "/news"                 -> 아직 내용 없는 임시 페이지
+ * "/about"                -> 회사 소개(건축사사무소 단 + 대표 프로필)
  * "/contact"               -> 연락처 + 카카오맵
+ * "/contact/write"        -> 문의하기(이메일 작성)
  * "/write"                -> 게시글 작성 (로그인 필요)
  * "/posts/:postId"        -> 게시글 상세
  * "/posts/:postId/edit"   -> 게시글 수정 (로그인 필요)
@@ -34,8 +38,9 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/news" element={<PlaceholderPage title="NEWS" />} />
-        <Route path="/about" element={<PlaceholderPage title="ABOUT" />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/contact/write" element={<ContactWritePage />} />
         <Route
           path="/write"
           element={

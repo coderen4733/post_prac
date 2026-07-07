@@ -126,6 +126,119 @@
   }
 }
 
+.about-page {
+  max-width: 960px;
+}
+
+.about-layout {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 720px) {
+  .about-layout {
+    flex-direction: column;
+  }
+}
+
+.about-intro {
+  /* .about-profile과 4:3 비율로 나눠서, 화면을 줄일 때도 두 영역이
+     같은 비율로 함께 좁아지도록 합니다. */
+  flex: 4;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.about-intro-image {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.about-intro h2 {
+  margin: 0 0 4px;
+}
+
+/* AWARDS 라벨(.about-profile-block h3)과 같은 색깔(#888)을 씁니다.
+   (.about-intro p보다 나중에 와야 색이 덮어써지지 않으므로 셀렉터에
+   p를 명시해서 우선순위를 맞춥니다) */
+.about-intro p.about-intro-subtitle {
+  margin: 0 0 16px;
+  color: #888;
+}
+
+.about-intro p {
+  margin: 0 0 16px;
+  line-height: 1.7;
+  color: #333;
+}
+
+.about-intro p:last-child {
+  margin-bottom: 0;
+}
+
+.about-profile {
+  /* 화면이 넓을 땐 .about-intro보다 좁게(4:3 비율), 화면을 줄이면
+     같은 비율로 함께 좁아지다가 필요하면 줄바꿈도 일어납니다. */
+  flex: 3;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.about-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 정다혜 대표 프로필 사진: 원본이 원형으로 찍힌 사진이라 그대로 동그랗게 표시 */
+.about-profile-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.about-profile-header h2 {
+  margin: 0;
+}
+
+.about-profile-role {
+  margin: 4px 0 0;
+  color: #666;
+}
+
+.about-profile-details {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-profile-block h3 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: #888;
+}
+
+.about-profile-block ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.about-profile-block li {
+  color: #333;
+  line-height: 1.6;
+}
+
 .post-form {
   display: flex;
   flex-direction: column;
@@ -140,6 +253,13 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+/* 문의하기(ContactWritePage) 화면의 문의내용 입력창입니다. */
+.content-textarea {
+  min-height: 200px;
+  font-family: inherit;
+  resize: vertical;
 }
 
 .post-form button {

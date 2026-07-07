@@ -21,3 +21,7 @@ AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_REGION = os.getenv("AWS_REGION", "ap-northeast-2")
 AWS_S3_BUCKET_NAME = os.getenv("AWS_S3_BUCKET_NAME")
+
+# Email(Gmail) 관련 📧
+MY_GOOGLE_EMAIL = os.getenv("MY_GOOGLE_EMAIL")
+GOOGLE_APP_PW = os.getenv("GOOGLE_APP_PW")
