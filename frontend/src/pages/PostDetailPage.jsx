@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { deletePost, fetchPost } from "../api/postApi";
+import { getRole } from "../auth/tokenStorage";
 
 /**
  * 게시글 상세 화면입니다.
  * url의 postId로 백엔드(GET /posts/{postId})를 호출해 본문 전체를 보여줍니다.
+ * "수정"/"삭제" 버튼은 로그인한 사용자의 role이 staff/admin일 때만 보입니다.
  */
 export default function PostDetailPage() {
   const { postId } = useParams();
@@ -12,6 +14,8 @@ export default function PostDetailPage() {
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const role = getRole();
+  const canManage = role === "staff" || role === "admin";
 
   useEffect(() => {
     setIsLoading(true);
@@ -45,20 +49,22 @@ export default function PostDetailPage() {
                 {new Date(post.created_at).toLocaleString()}
               </p>
             </div>
-            <div className="post-detail-actions">
-              <Link to={`/posts/${postId}/edit`}>
-                <button type="button" className="post-detail-edit">
-                  수정
+            {canManage && (
+              <div className="post-detail-actions">
+                <Link to={`/posts/${postId}/edit`}>
+                  <button type="button" className="post-detail-edit">
+                    수정
+                  </button>
+                </Link>
+                <button
+                  type="button"
+                  className="post-detail-delete"
+                  onClick={() => setIsConfirmOpen(true)}
+                >
+                  삭제
                 </button>
-              </Link>
-              <button
-                type="button"
-                className="post-detail-delete"
-                onClick={() => setIsConfirmOpen(true)}
-              >
-                삭제
-              </button>
-            </div>
+              </div>
+            )}
           </div>
           <div
             className="content-preview"

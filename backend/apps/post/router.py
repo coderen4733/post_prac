@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, File, UploadFile, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from apps.auth.dependencies import require_roles
 from apps.post import service
 from apps.post.models.schemas import (
     ImageUploadResponse,
@@ -8,20 +9,32 @@ from apps.post.models.schemas import (
     PostResponse,
     PostSummaryResponse,
 )
+from apps.user.models.enums import UserRole
 from core.database import get_database
 
 post_router = APIRouter()
 
+# Project 생성/수정/삭제는 admin, staff만 가능 (목록/상세 조회는 누구나 가능)
+_require_staff_or_admin = require_roles(UserRole.ADMIN, UserRole.STAFF)
+
 
 # Project 이미지 파일 S3 처리 API
-@post_router.post("/images", response_model=ImageUploadResponse)
+@post_router.post(
+    "/images",
+    response_model=ImageUploadResponse,
+    dependencies=[Depends(_require_staff_or_admin)],
+)
 async def upload_post_image(file: UploadFile = File(...)):
     url = await service.upload_image(file)
     return ImageUploadResponse(url=url)
 
 
 # Project 생성(C) API
-@post_router.post("", response_model=PostResponse)
+@post_router.post(
+    "",
+    response_model=PostResponse,
+    dependencies=[Depends(_require_staff_or_admin)],
+)
 async def create_post(
     payload: PostCreateRequest,
     db: AsyncIOMotorDatabase = Depends(get_database),
@@ -49,7 +62,11 @@ async def get_post(
 
 
 # Project 수정(U) API
-@post_router.put("/{post_id}", response_model=PostResponse)
+@post_router.put(
+    "/{post_id}",
+    response_model=PostResponse,
+    dependencies=[Depends(_require_staff_or_admin)],
+)
 async def update_post(
     post_id: str,
     payload: PostCreateRequest,
@@ -59,7 +76,11 @@ async def update_post(
 
 
 # Project 삭제(D) API
-@post_router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
+@post_router.delete(
+    "/{post_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(_require_staff_or_admin)],
+)
 async def delete_post(
     post_id: str,
     db: AsyncIOMotorDatabase = Depends(get_database),
