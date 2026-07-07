@@ -16,6 +16,116 @@
   text-align: center;
 }
 
+.contact-page {
+  max-width: 960px;
+}
+
+.contact-layout {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+  align-items: stretch;
+}
+
+.contact-info {
+  flex: 1;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  color: #666;
+}
+
+.contact-logo-image {
+  display: block;
+  max-width: 100%;
+  /* 그림 아래 여백을 .contact-info의 아래쪽 padding(24px)과 같게 맞춰서,
+     그림과의 간격 = 아래 여백이 되도록 합니다. */
+  margin-bottom: 24px;
+}
+
+.contact-detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* 그림 속 'ㄴ'자 모양 블럭의 세로줄 중심에 각 로고 아이콘의 중심이
+     오도록 맞춘 값입니다(.contact-info 좌측 padding 24px + 28px). */
+  padding-left: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-detail-list li {
+  color: #333;
+}
+
+.contact-icon {
+  flex-shrink: 0;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+/*
+ * 인스타그램/이메일(a 태그)과 주소(지도 초기화용 button)가 똑같은
+ * 링크처럼 보이고 똑같은 hover 효과를 갖도록 공통 클래스로 묶습니다.
+ * 아이콘과 문구를 같은 링크 안에 두어서, 아이콘을 눌러도 문구를 누른 것과
+ * 똑같이 동작합니다.
+ */
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #333;
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.contact-link:hover {
+  color: #d93025;
+}
+
+/* 로고에 마우스를 올리면 살짝 확대됩니다. */
+.contact-link:hover .contact-icon {
+  transform: scale(1.15);
+}
+
+.kakao-map {
+  flex: 1;
+  min-height: 420px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+.kakao-map-canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+}
+
+.kakao-map-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 420px;
+  padding: 16px;
+  text-align: center;
+  color: #888;
+}
+
+@media (max-width: 720px) {
+  .contact-layout {
+    flex-direction: column;
+  }
+}
+
 .post-form {
   display: flex;
   flex-direction: column;

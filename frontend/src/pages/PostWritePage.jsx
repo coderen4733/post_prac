@@ -10,8 +10,8 @@ export default function PostWritePage() {
   const navigate = useNavigate();
 
   const handleSubmit = async ({ title, content }) => {
-    const post = await createPost({ title, content });
-    navigate(`/posts/${post.id}`);
+    const { data } = await createPost({ title, content });
+    navigate(`/posts/${data.id}`);
   };
 
   return (
