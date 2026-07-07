@@ -3,6 +3,17 @@ import { authFetch } from "./authFetch";
 // 백엔드(FastAPI) 서버 주소. frontend/.env의 VITE_API_BASE_URL 값을 읽어옵니다.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// post API도 auth API와 마찬가지로 전부 { message, data } 형태로 응답이 감싸져 옵니다.
+// 실패했을 때는 서버가 보내주는 실제 에러 사유(detail)를 우선 사용하고,
+// 그마저 없으면 fallbackMessage를 사용합니다.
+async function unwrap(response, fallbackMessage) {
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.detail || fallbackMessage);
+  }
+  return response.json();
+}
+
 /**
  * 이미지 파일을 백엔드로 보내 S3에 업로드하고, 저장된 이미지의 url을 받아옵니다.
  * (POST /posts/images, admin/staff 전용이라 authFetch로 로그인 토큰을 붙입니다)
@@ -16,11 +27,7 @@ export async function uploadPostImage(file) {
     body: formData,
   });
 
-  if (!response.ok) {
-    throw new Error("이미지 업로드에 실패했습니다.");
-  }
-
-  const data = await response.json();
+  const { data } = await unwrap(response, "이미지 업로드에 실패했습니다.");
   return data.url;
 }
 
@@ -35,11 +42,7 @@ export async function createPost({ title, content }) {
     body: JSON.stringify({ title, content }),
   });
 
-  if (!response.ok) {
-    throw new Error("게시글 생성에 실패했습니다.");
-  }
-
-  return response.json();
+  return unwrap(response, "게시글 생성에 실패했습니다.");
 }
 
 /**
@@ -49,11 +52,7 @@ export async function createPost({ title, content }) {
 export async function fetchPosts() {
   const response = await fetch(`${API_BASE_URL}/posts`);
 
-  if (!response.ok) {
-    throw new Error("게시글 목록을 불러오지 못했습니다.");
-  }
-
-  return response.json();
+  return unwrap(response, "게시글 목록을 불러오지 못했습니다.");
 }
 
 /**
@@ -63,11 +62,7 @@ export async function fetchPosts() {
 export async function fetchPost(postId) {
   const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
 
-  if (!response.ok) {
-    throw new Error("게시글을 찾을 수 없습니다.");
-  }
-
-  return response.json();
+  return unwrap(response, "게시글을 찾을 수 없습니다.");
 }
 
 /**
@@ -81,11 +76,7 @@ export async function updatePost(postId, { title, content }) {
     body: JSON.stringify({ title, content }),
   });
 
-  if (!response.ok) {
-    throw new Error("게시글 수정에 실패했습니다.");
-  }
-
-  return response.json();
+  return unwrap(response, "게시글 수정에 실패했습니다.");
 }
 
 /**
@@ -97,7 +88,5 @@ export async function deletePost(postId) {
     method: "DELETE",
   });
 
-  if (!response.ok) {
-    throw new Error("게시글 삭제에 실패했습니다.");
-  }
+  await unwrap(response, "게시글 삭제에 실패했습니다.");
 }

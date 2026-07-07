@@ -20,7 +20,7 @@ export default function PostDetailPage() {
   useEffect(() => {
     setIsLoading(true);
     fetchPost(postId)
-      .then(setPost)
+      .then(({ data }) => setPost(data))
       .catch((error) => alert(error.message))
       .finally(() => setIsLoading(false));
   }, [postId]);
