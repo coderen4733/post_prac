@@ -1,15 +1,17 @@
+import { authFetch } from "./authFetch";
+
 // 백엔드(FastAPI) 서버 주소. frontend/.env의 VITE_API_BASE_URL 값을 읽어옵니다.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * 이미지 파일을 백엔드로 보내 S3에 업로드하고, 저장된 이미지의 url을 받아옵니다.
- * (POST /posts/images)
+ * (POST /posts/images, admin/staff 전용이라 authFetch로 로그인 토큰을 붙입니다)
  */
 export async function uploadPostImage(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch(`${API_BASE_URL}/posts/images`, {
+  const response = await authFetch("/posts/images", {
     method: "POST",
     body: formData,
   });
@@ -24,10 +26,10 @@ export async function uploadPostImage(file) {
 
 /**
  * 제목과 본문(HTML)으로 게시글을 생성합니다.
- * (POST /posts)
+ * (POST /posts, admin/staff 전용이라 authFetch로 로그인 토큰을 붙입니다)
  */
 export async function createPost({ title, content }) {
-  const response = await fetch(`${API_BASE_URL}/posts`, {
+  const response = await authFetch("/posts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, content }),
@@ -70,10 +72,10 @@ export async function fetchPost(postId) {
 
 /**
  * 게시글의 제목/본문을 수정합니다.
- * (PUT /posts/{postId})
+ * (PUT /posts/{postId}, admin/staff 전용이라 authFetch로 로그인 토큰을 붙입니다)
  */
 export async function updatePost(postId, { title, content }) {
-  const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+  const response = await authFetch(`/posts/${postId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, content }),
@@ -88,10 +90,10 @@ export async function updatePost(postId, { title, content }) {
 
 /**
  * 게시글을 삭제합니다.
- * (DELETE /posts/{postId})
+ * (DELETE /posts/{postId}, admin/staff 전용이라 authFetch로 로그인 토큰을 붙입니다)
  */
 export async function deletePost(postId) {
-  const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+  const response = await authFetch(`/posts/${postId}`, {
     method: "DELETE",
   });
 

@@ -7,6 +7,8 @@ from apps.auth.models.schemas import (
     ReTokenResponse,
     SignInRequest,
     SignInResponse,
+    SignOutRequest,
+    SignOutResponse,
     SignUpRequest,
     SignUpResponse,
 )
@@ -63,3 +65,19 @@ async def re_token(
     data = await service.re_token(db, dto)
     # 2. Response(Router -> FrontEnd)
     return {"message": "Access Token 재발급에 성공했습니다.", "data": data}
+
+
+# 로그아웃(sign-out) API
+@auth_router.post(
+    "/sign-out",
+    response_model=ResponseSchema[SignOutResponse],
+    status_code=status.HTTP_200_OK,
+)
+async def sign_out(
+    dto: SignOutRequest,
+    db: AsyncIOMotorDatabase = Depends(get_database),
+):
+    # 1. Data(Router <- Service)
+    data = await service.sign_out(db, dto)
+    # 2. Response(Router -> FrontEnd)
+    return {"message": "로그아웃에 성공하였습니다.", "data": data}

@@ -12,6 +12,8 @@ from apps.auth.models.schemas import (
     ReTokenResponse,
     SignInRequest,
     SignInResponse,
+    SignOutRequest,
+    SignOutResponse,
     SignUpRequest,
     SignUpResponse,
 )
@@ -46,6 +48,7 @@ def _to_sign_in_response(token: dict) -> SignInResponse:
         access_token=token["access_token"],
         refresh_token=token["refresh_token"],
         token_type=token["token_type"],
+        role=token["role"],
     )
 
 
@@ -56,6 +59,12 @@ def _to_re_token_response(re_token: dict) -> ReTokenResponse:
         access_token=re_token["access_token"],
         token_type=re_token["token_type"],
     )
+
+
+# 로그아웃(sign-out) Response
+def _to_sign_out_response(result: dict) -> SignOutResponse:
+    # 1. 반환(schema에 맞게)
+    return SignOutResponse(success=result["success"])
 
 
 # 회원가입(sign-up) API
@@ -147,6 +156,7 @@ async def sign_in(
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
+        "role": user["role"],
     }
     return _to_sign_in_response(result)
 
@@ -194,7 +204,7 @@ async def re_token(db: AsyncIOMotorDatabase, dto: ReTokenRequest) -> dict:
             ACCESS_TOKEN_SECRET,
             algorithm=JWT_ALGORITHM,
         )
-        # 4. Response
+        # 4. 데이터 변환 및 반환
         result = {
             "access_token": new_access_token,
             "token_type": "bearer",
@@ -210,3 +220,21 @@ async def re_token(db: AsyncIOMotorDatabase, dto: ReTokenRequest) -> dict:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="인증 세션이 유효하지 않습니다.",
         )
+
+
+# 로그아웃(sign-out) API
+async def sign_out(db: AsyncIOMotorDatabase, dto: SignOutRequest) -> dict:
+    # 1. 요청받은 Refresh Token을 DB에서 삭제 (로그아웃 처리)
+    deleted_count = (
+        await auth_repository.delete_refresh_token_by_refresh_token(
+            db, dto.refresh_token
+        )
+    )
+    # 1-1. 삭제된 문서가 없다면(이미 로그아웃됐거나 잘못된 토큰) 에러처리
+    if deleted_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="유효하지 않은 리프레시 토큰입니다.",
+        )
+    # 2. 데이터 변환 및 반환
+    return _to_sign_out_response({"success": True})

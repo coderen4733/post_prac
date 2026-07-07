@@ -40,3 +40,14 @@ async def create_refresh_token(
             status_code=status.HTTP_409_CONFLICT,
             detail="이미 존재하는 리프레시 토큰입니다.",
         )
+
+
+# Refresh Token 삭제(D) by refresh_token
+async def delete_refresh_token_by_refresh_token(
+    db: AsyncIOMotorDatabase, refresh_token: str
+) -> int:
+    # 실제로 삭제된 문서 수 반환(0이면 이미 없는/잘못된 토큰이라는 뜻)
+    result = await db[COLLECTION_NAME].delete_one(
+        {"refresh_token": refresh_token}
+    )
+    return result.deleted_count

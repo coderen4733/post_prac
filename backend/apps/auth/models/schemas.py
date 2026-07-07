@@ -33,6 +33,7 @@ class SignInResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+    role: str
 
 
 # 토큰재발급(re-token) API - 요청(Req)
@@ -44,3 +45,13 @@ class ReTokenRequest(BaseModel):
 class ReTokenResponse(BaseModel):
     access_token: str = Field(..., description="Access Token")
     token_type: str = "bearer"
+
+
+# 로그아웃(sign-out) API - 요청(Req)
+class SignOutRequest(BaseModel):
+    refresh_token: str = Field(..., description="Refresh Token")
+
+
+# 로그아웃(sign-out) API - 응답(Res)
+class SignOutResponse(BaseModel):
+    success: bool = True
